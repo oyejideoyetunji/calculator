@@ -1,0 +1,70 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.border-bottom-gray {
+  border-bottom: 1px solid lightgray;
+}
+
+main {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  background-color: #fdfbfb;
+}
+
+.screen,
+.keyboard {
+  width: 100%;
+}
+
+.screen {
+  height: 30%;
+  padding: 0.5rem;
+  word-wrap: break-word;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.keyboard {
+  height: 60%;
+  padding: 2rem 0;
+
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: auto auto auto auto;
+  grid-template-rows: auto auto auto auto;
+}
+
+.key-pad {
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f4f4;
+}
+
+.key-pad:hover {
+  background-color: #e4e4e4;
+}
+
+.eqtn-screen,
+.result-screen {
+    width: 100%;
+    height: 50%;
+    padding: 0.5rem 0;
+}
