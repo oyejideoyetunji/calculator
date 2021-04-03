@@ -1,7 +1,8 @@
+// Screens
 const equationScreen = document.getElementById("eqtn-screen");
 const resultScreen = document.getElementById("result-screen");
 
-// General control
+// Controls
 const clearAllBtn = document.getElementById("clear-all");
 const deleteBtn = document.getElementById("delete");
 const equalsBtn = document.getElementById("equals");
@@ -25,5 +26,4 @@ const sixBtn = document.getElementById("6");
 const sevenBtn = document.getElementById("7");
 const eightBtn = document.getElementById("8");
 const nineBtn = document.getElementById("9");
-
-const dot = document.getElementById('dot');
+const dot = document.getElementById("dot");

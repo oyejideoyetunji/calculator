@@ -27,6 +27,18 @@ const digitButtons = {
   nineBtn,
 };
 
-const operators = ['+', '-', '/', '*', '%', '^']
+const operands = {
+  initialOperand: "",
+  currentOperand: "",
+};
 
-let equation = [];
+let currentOperator = "";
+
+const operators = {
+  "%": (operand) => operand / 100,
+  "+": (initialOperand, currentOperand) => initialOperand + currentOperand,
+  "-": (initialOperand, currentOperand) => initialOperand - currentOperand,
+  "/": (initialOperand, currentOperand) => initialOperand / currentOperand,
+  "*": (initialOperand, currentOperand) => initialOperand * currentOperand,
+  "^": (initialOperand, currentOperand) => Math.pow(initialOperand, currentOperand),
+};
