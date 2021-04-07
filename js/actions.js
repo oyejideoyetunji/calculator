@@ -2,79 +2,70 @@ function writeOperand(event) {
   const digitValue = event.target.innerText;
 
   if (
-    (digitValue === "." && operands.currentOperand.includes(".")) ||
-    (digitValue === "0" &&
+    !(digitValue === "." && operands.currentOperand.includes(".")) &&
+    !(
       operands.currentOperand.startsWith("0") &&
-      operands.currentOperand.length === 1) ||
-    (operands.initialOperand && !currentOperator)
+      digitValue === "0" &&
+      operands.currentOperand.length === 1
+    )
   ) {
-    return;
-  } else {
-    operands.currentOperand += digitValue;
-  }
+    operands.currentOperand =
+      operands.currentOperand === "Infinity"
+        ? digitValue
+        : operands.currentOperand + digitValue;
 
-  equationScreen.textContent = `${currentOperator} ${operands.currentOperand}`;
+    equationScreen.textContent = `${operands.currentOperand}`;
+  }
 }
 
 function writeOperatorAndCompute(event) {
   const operator = event.target.innerText;
 
-  if(operands.initialOperand && !operands.currentOperand){
-    if(operator === "%"){
-        operands.initialOperand = compute(operator, {initialOperand: operands.initialOperand});
-        operands.currentOperand = "";
-        currentOperator = "";
-    }else{
-        currentOperator = operator;
-    }
-  }
-  else if(operands.currentOperand && !operands.initialOperand){
-    if(operator === "%"){
-        operands.initialOperand = compute(operator, {
-          initialOperand: operands.currentOperand,
-        });
-        operands.currentOperand = "";
-        currentOperator = "";
-    }else{
-        operands.initialOperand = operands.currentOperand;
-        operands.currentOperand = "";
-        currentOperator = operator;
-    }
-  }
-  else if(operands.initialOperand && operands.currentOperand){
-    operands.initialOperand = compute(currentOperator, operands);
-
-    if(operator === "%"){
-        operands.initialOperand = compute(operator, {initialOperand: operands.initialOperand})
-        operands.currentOperand = "";
-        currentOperator = "";
-    }else{
-        operands.currentOperand = "";
-        currentOperator = operator;
+  if (operands.currentOperand && !operands.initialOperand) {
+    operands.initialOperand = operator === "%" ? "" : operands.currentOperand;
+    operands.currentOperand =
+      operator === "%"
+        ? compute(operator, { initialOperand: operands.currentOperand })
+        : "";
+    currentOperator = operator === "%" ? "" : operator;
+  } else if (operands.initialOperand && !operands.currentOperand) {
+    operands.currentOperand =
+      operator === "%"
+        ? compute(operator, { initialOperand: operands.initialOperand })
+        : operands.currentOperand;
+    operands.initialOperand = operator === "%" ? "" : operands.initialOperand;
+    currentOperator = operator === "%" ? "" : operator;
+  } else if (operands.initialOperand && operands.currentOperand) {
+    if (
+      operands.initialOperand === "Infinity" ||
+      compute(currentOperator, operands) === "Infinity"
+    ) {
+      operands.initialOperand = operator === "%" ? "" : "Infinity";
+      operands.currentOperand = operator === "%" ? "Infinity" : "";
+      currentOperator = operator === "%" ? "" : operator;
+    } else {
+      const result = compute(currentOperator, operands);
+      operands.currentOperand =
+        operator === "%" ? compute(operator, { initialOperand: result }) : "";
+      operands.initialOperand = operator === "%" ? "" : result;
+      currentOperator = operator === "%" ? "" : operator;
     }
   }
 
-  resultScreen.textContent = operands.initialOperand;
-  equationScreen.textContent = `${currentOperator} ${operands.currentOperand}`;
+  resultScreen.textContent = `${operands.initialOperand} ${currentOperator}`;
+  equationScreen.textContent = `${operands.currentOperand}`;
 }
 
 function deleteCharacter() {
-  if(!operands.currentOperand && !currentOperator) return;
+  operands.currentOperand =
+    !operands.currentOperand || operands.currentOperand === "Infinity"
+      ? ""
+      : operands.currentOperand.slice(0, operands.currentOperand.length - 1);
 
-  if(!operands.currentOperand){
-    currentOperator = "";
-  }
-  else{
-    operands.currentOperand = operands.currentOperand.slice(
-      0,
-      operands.currentOperand.length - 1
-    );
-  }
-
-  equationScreen.textContent = `${currentOperator} ${operands.currentOperand}`;
+  equationScreen.textContent = `${operands.currentOperand}`;
 }
 
-function clearAll() {
+function clearAll(event) {
   operands.initialOperand = "";
   operands.currentOperand = "";
   currentOperator = "";
@@ -82,27 +73,24 @@ function clearAll() {
   resultScreen.textContent = "";
 }
 
-function computeAndWriteResult(){
-    if(!operands.currentOperand) return;
+function computeAndWriteResult() {
+  if (operands.currentOperand && operands.initialOperand) {
+    operands.currentOperand = compute(currentOperator, operands);
+    operands.initialOperand = "";
+    currentOperator = "";
 
-    if (operands.currentOperand && !operands.initialOperand) {
-      operands.initialOperand = operands.currentOperand;
-      operands.currentOperand = "";
-      currentOperator = "";
-    } else if (operands.initialOperand && operands.currentOperand) {
-      operands.initialOperand = compute(currentOperator, operands);
-      operands.currentOperand = "";
-      currentOperator = "";
-    }
-
-    resultScreen.textContent = operands.initialOperand;
-    equationScreen.textContent = `${currentOperator} ${operands.currentOperand}`;
+    resultScreen.textContent = `${operands.currentOperand}`;
+    equationScreen.textContent = `${operands.currentOperand}`;
+  }
 }
 
 function compute(currentOperator, { initialOperand, currentOperand }) {
-    const initialOperandVal = parseFloat(initialOperand);
-    const currentOperandVal = parseFloat(currentOperand);
+  const initialOperandVal = parseFloat(initialOperand);
+  const currentOperandVal = parseFloat(currentOperand);
 
-    const result = operators[currentOperator](initialOperandVal, currentOperandVal);
-    return `${result}`;
+  const result = operatorFunctions[currentOperator](
+    initialOperandVal,
+    currentOperandVal
+  );
+  return `${result}`;
 }

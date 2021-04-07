@@ -64,7 +64,27 @@ main {
 
 .eqtn-screen,
 .result-screen {
-    width: 100%;
-    height: 50%;
-    padding: 0.5rem 0;
+  width: 100%;
+  height: 50%;
+  padding: 0.5rem 0;
+  text-align: right;
+}
+
+
+@media only screen and (min-width: 500px){
+    main {
+        width: 80%;
+    }
+}
+
+@media only screen and (min-width: 750px){
+    main {
+        width: 60%;
+    }
+}
+
+@media only screen and (min-width: 1200px){
+    main {
+        width: 40%;
+    }
 }

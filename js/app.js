@@ -1,10 +1,9 @@
-for (const digitButton in digitButtons){
-    digitButtons[digitButton].addEventListener("click", writeOperand);
-}
-for (const operatorButton in operatorButtons){
-    operatorButtons[operatorButton].addEventListener('click', writeOperatorAndCompute);
-}
+digits.forEach((digit) => digit.addEventListener("click", writeOperand));
 
-deleteBtn.addEventListener('click', deleteCharacter);
-clearAllBtn.addEventListener('click', clearAll);
-equalsBtn.addEventListener('click', computeAndWriteResult);
+operators.forEach((operator) =>
+  operator.addEventListener("click", writeOperatorAndCompute)
+);
+
+deleteBtn.addEventListener("click", deleteCharacter);
+clearAllBtn.addEventListener("click", clearAll);
+equalsBtn.addEventListener("click", computeAndWriteResult);
