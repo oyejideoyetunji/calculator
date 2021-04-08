@@ -14,7 +14,7 @@ function writeOperand(event) {
         ? digitValue
         : operands.currentOperand + digitValue;
 
-    equationScreen.textContent = `${operands.currentOperand}`;
+    equationScreen.textContent = `${delimitNumber(operands.currentOperand)}`;
   }
 }
 
@@ -36,24 +36,16 @@ function writeOperatorAndCompute(event) {
     operands.initialOperand = operator === "%" ? "" : operands.initialOperand;
     currentOperator = operator === "%" ? "" : operator;
   } else if (operands.initialOperand && operands.currentOperand) {
-    if (
-      operands.initialOperand === "Infinity" ||
-      compute(currentOperator, operands) === "Infinity"
-    ) {
-      operands.initialOperand = operator === "%" ? "" : "Infinity";
-      operands.currentOperand = operator === "%" ? "Infinity" : "";
-      currentOperator = operator === "%" ? "" : operator;
-    } else {
-      const result = compute(currentOperator, operands);
-      operands.currentOperand =
-        operator === "%" ? compute(operator, { initialOperand: result }) : "";
-      operands.initialOperand = operator === "%" ? "" : result;
-      currentOperator = operator === "%" ? "" : operator;
-    }
+    const result = compute(currentOperator, operands);
+    operands.currentOperand =
+      operator === "%" ? compute(operator, { initialOperand: result }) : "";
+    operands.initialOperand = operator === "%" ? "" : result;
+    currentOperator = operator === "%" ? "" : operator;
   }
 
-  resultScreen.textContent = `${operands.initialOperand} ${currentOperator}`;
-  equationScreen.textContent = `${operands.currentOperand}`;
+  resultScreen.textContent = 
+    `${delimitNumber(operands.initialOperand)} ${currentOperator}`;
+  equationScreen.textContent = `${delimitNumber(operands.currentOperand)}`;
 }
 
 function deleteCharacter() {
@@ -62,7 +54,7 @@ function deleteCharacter() {
       ? ""
       : operands.currentOperand.slice(0, operands.currentOperand.length - 1);
 
-  equationScreen.textContent = `${operands.currentOperand}`;
+  equationScreen.textContent = `${delimitNumber(operands.currentOperand)}`;
 }
 
 function clearAll(event) {
@@ -74,13 +66,13 @@ function clearAll(event) {
 }
 
 function computeAndWriteResult() {
-  if (operands.currentOperand && operands.initialOperand) {
+  if (operands.currentOperand && operands.initialOperand && currentOperator) {
     operands.currentOperand = compute(currentOperator, operands);
     operands.initialOperand = "";
     currentOperator = "";
 
-    resultScreen.textContent = `${operands.currentOperand}`;
-    equationScreen.textContent = `${operands.currentOperand}`;
+    resultScreen.textContent = `${delimitNumber(operands.currentOperand)}`;
+    equationScreen.textContent = `${delimitNumber(operands.currentOperand)}`;
   }
 }
 
@@ -88,9 +80,35 @@ function compute(currentOperator, { initialOperand, currentOperand }) {
   const initialOperandVal = parseFloat(initialOperand);
   const currentOperandVal = parseFloat(currentOperand);
 
-  const result = operatorFunctions[currentOperator](
-    initialOperandVal,
-    currentOperandVal
-  );
+  const eqnString = `${currentOperator}${initialOperand}${currentOperand}`;
+
+  const result =
+    eqnString.includes("*") &&
+    eqnString.includes("Infinity") &&
+    eqnString.includes("0") // NaN
+      ? 0
+      : operatorFunctions[currentOperator](
+          initialOperandVal,
+          currentOperandVal
+        );
   return `${result}`;
+}
+
+function delimitNumber(number) {
+  return `${number}` === "Infinity" || `${number}`.length < 4
+    ? number
+    : `${number}`
+        .split(".")
+        .map((num, idx) => {
+          return idx === 0
+            ? [...num]
+                .reverse()
+                .map((el, idx) => {
+                  return idx % 3 === 0 && idx !== 0 ? `${el},` : el;
+                })
+                .reverse()
+                .join("")
+            : num;
+        })
+        .join(".");
 }
