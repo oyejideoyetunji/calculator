@@ -73,7 +73,12 @@ function computeAndWriteResult() {
     currentOperator = "";
 
     resultScreen.textContent = `${delimitNumber(operands.currentOperand)}`;
-    equationScreen.textContent = `${delimitNumber(operands.currentOperand)}`;
+    equationScreen.textContent = operands.currentOperand.startsWith("-")
+      ? `${delimitNumber(operands.currentOperand).slice(
+          1,
+          operands.currentOperand.length
+        )}-`
+      : `${delimitNumber(operands.currentOperand)}`;
   }
 }
 
@@ -97,7 +102,7 @@ function compute(currentOperator, { initialOperand, currentOperand }) {
 
 function delimitNumber(number) {
   return `${number}` === "Infinity" || `${number}`.length < 4
-    ? number
+    ? `${number}`
     : `${number}`
         .split(".")
         .map((num, idx) => {
