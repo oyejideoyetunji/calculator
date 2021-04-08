@@ -43,8 +43,9 @@ function writeOperatorAndCompute(event) {
     currentOperator = operator === "%" ? "" : operator;
   }
 
-  resultScreen.textContent = 
-    `${delimitNumber(operands.initialOperand)} ${currentOperator}`;
+  resultScreen.textContent = `${delimitNumber(
+    operands.initialOperand
+  )} ${currentOperator}`;
   equationScreen.textContent = `${delimitNumber(operands.currentOperand)}`;
 }
 
@@ -104,7 +105,9 @@ function delimitNumber(number) {
             ? [...num]
                 .reverse()
                 .map((el, idx) => {
-                  return idx % 3 === 0 && idx !== 0 ? `${el},` : el;
+                  return idx % 3 === 0 && idx !== 0 && el !== "-"
+                    ? `${el},`
+                    : el;
                 })
                 .reverse()
                 .join("")

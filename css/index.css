@@ -97,18 +97,18 @@ main {
 
 @media only screen and (min-width: 500px) {
   main {
-    width: 80%;
+    width: 75%;
   }
 }
 
 @media only screen and (min-width: 750px) {
   main {
-    width: 60%;
+    width: 50%;
   }
 }
 
 @media only screen and (min-width: 1200px) {
   main {
-    width: 40%;
+    width: 30%;
   }
 }

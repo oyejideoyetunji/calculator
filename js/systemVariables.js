@@ -1,9 +1,3 @@
-const controlButtons = {
-  clearAllBtn,
-  deleteBtn,
-  equalsBtn,
-};
-
 const operands = {
   initialOperand: "",
   currentOperand: "",
