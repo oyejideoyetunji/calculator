@@ -76,7 +76,7 @@ function computeAndWriteResult() {
     equationScreen.textContent = operands.currentOperand.startsWith("-")
       ? `${delimitNumber(operands.currentOperand).slice(
           1,
-          operands.currentOperand.length
+          operands.currentOperand.length -1
         )}-`
       : `${delimitNumber(operands.currentOperand)}`;
   }
