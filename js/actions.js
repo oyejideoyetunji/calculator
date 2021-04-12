@@ -98,7 +98,7 @@ function compute(currentOperator, { initialOperand, currentOperand }) {
 }
 
 function delimitNumber(number) {
-  return `${number}` === "Infinity" || `${number}`.length < 4
+  return `${number}`.includes("Infinity") || `${number}`.length < 4
     ? `${number}`
     : `${number}`
         .split(".")
