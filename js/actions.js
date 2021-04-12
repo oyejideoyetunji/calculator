@@ -14,7 +14,7 @@ function writeOperand(event) {
         ? digitValue
         : operands.currentOperand + digitValue;
 
-    equationScreen.textContent = `${delimitNumber(operands.currentOperand)}`;
+    equationScreen.textContent = writeToEquationScreen(operands.currentOperand);
   }
 }
 
@@ -46,7 +46,7 @@ function writeOperatorAndCompute(event) {
   resultScreen.textContent = `${delimitNumber(
     operands.initialOperand
   )} ${currentOperator}`;
-  equationScreen.textContent = `${delimitNumber(operands.currentOperand)}`;
+  equationScreen.textContent = writeToEquationScreen(operands.currentOperand);
 }
 
 function deleteCharacter() {
@@ -55,7 +55,7 @@ function deleteCharacter() {
       ? ""
       : operands.currentOperand.slice(0, operands.currentOperand.length - 1);
 
-  equationScreen.textContent = `${delimitNumber(operands.currentOperand)}`;
+  equationScreen.textContent = writeToEquationScreen(operands.currentOperand);
 }
 
 function clearAll(event) {
@@ -73,9 +73,7 @@ function computeAndWriteResult() {
     currentOperator = "";
 
     resultScreen.textContent = `${delimitNumber(operands.currentOperand)}`;
-    equationScreen.textContent = operands.currentOperand.startsWith("-")
-      ? `${delimitNumber(operands.currentOperand.slice(1))}-`
-      : `${delimitNumber(operands.currentOperand)}`;
+    equationScreen.textContent = writeToEquationScreen(operands.currentOperand);
   }
 }
 
@@ -83,18 +81,11 @@ function compute(currentOperator, { initialOperand, currentOperand }) {
   const initialOperandVal = parseFloat(initialOperand);
   const currentOperandVal = parseFloat(currentOperand);
 
-  const eqnString = `${currentOperator}${initialOperand}${currentOperand}`;
-
-  const result =
-    eqnString.includes("*") &&
-    eqnString.includes("Infinity") &&
-    eqnString.includes("0") // NaN
-      ? 0
-      : operatorFunctions[currentOperator](
-          initialOperandVal,
-          currentOperandVal
-        );
-  return `${result}`;
+  const result = operatorFunctions[currentOperator](
+    initialOperandVal,
+    currentOperandVal
+  );
+  return `${result}` === "NaN" ? "0" : `${result}`;
 }
 
 function delimitNumber(number) {
@@ -116,4 +107,10 @@ function delimitNumber(number) {
             : num;
         })
         .join(".");
+}
+
+function writeToEquationScreen(operand){
+    return operand.startsWith("-")
+      ? `${delimitNumber(operand.slice(1))}-`
+      : `${delimitNumber(operand)}`;
 }
