@@ -109,8 +109,10 @@ function delimitNumber(number) {
         .join(".");
 }
 
-function writeToEquationScreen(operand){
-    return operand.startsWith("-")
-      ? `${delimitNumber(operand.slice(1))}-`
-      : `${delimitNumber(operand)}`;
+function writeToEquationScreen(operand) {
+  return operand.startsWith("-")
+    ? `${delimitNumber(operand.slice(1))}-`
+    : operand.endsWith(".")
+    ? `.${delimitNumber(operand.slice(0, -1))}`
+    : `${delimitNumber(operand)}`;
 }
